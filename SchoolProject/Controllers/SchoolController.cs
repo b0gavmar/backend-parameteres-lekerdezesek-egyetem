@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SchoolProject.Models;
 
 namespace SchoolProject.Controllers
@@ -26,6 +27,20 @@ namespace SchoolProject.Controllers
         public async Task<IActionResult> GetAllDepartmentsAsync()
         {
             return Ok(_context.Departments);
+        }
+
+        [HttpGet("StudentsOfDepartment")]
+        public async Task<IActionResult> GetStudentsOfDepartmentAsync([FromQuery] string departmentName)
+        {
+            var result = await (from s in _context.Students
+                             from d in _context.Departments
+                             where d.Id == s.DepartmentId && d.Name == departmentName
+                             select s.Name).ToListAsync();
+
+            return Ok(result);
+            /*_context.Departments.FirstOrDefault(d => d.Name == departmentName);
+        return Ok(_context.Departments)*/
+            ;
         }
 
         [HttpGet("Courses")]
