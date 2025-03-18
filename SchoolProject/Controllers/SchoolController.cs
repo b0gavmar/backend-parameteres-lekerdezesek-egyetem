@@ -11,31 +11,6 @@ namespace SchoolProject.Controllers
     {
         private readonly SchoolContext _context = new SchoolContext();
 
-        [HttpGet("students")]
-        public async Task<IActionResult> GetAllStudentsAsync()
-        {
-            return Ok(_context.Students);
-        }
-
-        [HttpGet("Courses")]
-        public async Task<IActionResult> GetAllCoursesAsync()
-        {
-            return Ok(_context.Courses);
-        }
-
-        [HttpGet("Teachers")]
-        public async Task<IActionResult> GetAllTeachersAsync()
-        {
-            return Ok(_context.Teachers);
-        }
-
-
-        [HttpGet("Departments")]
-        public async Task<IActionResult> GetAllDepartmentsAsync()
-        {
-            return Ok(_context.Departments);
-        }
-
         [HttpGet("StudentsOfDepartment")]
         public async Task<IActionResult> GetStudentsOfDepartmentAsync([FromQuery] string departmentName)
         {
@@ -71,6 +46,32 @@ namespace SchoolProject.Controllers
         public async Task<IActionResult> GetNumberOfStudentsInADepartmentAsync(int department_id)
         {
             return Ok(_context.Students.Where(s => s.DepartmentId == department_id).Count());
+        }
+
+
+        [HttpGet("students")]
+        public async Task<IActionResult> GetAllStudentsAsync()
+        {
+            return Ok(_context.Students.Select(s=> s.Name).ToListAsync().Result);
+        }
+
+        [HttpGet("courses")]
+        public async Task<IActionResult> GetAllCoursesAsync()
+        {
+            return Ok(_context.Courses.Select(c => c.Name).ToListAsync().Result);
+        }
+
+        [HttpGet("teachers")]
+        public async Task<IActionResult> GetAllTeachersAsync()
+        {
+            return Ok(_context.Teachers.Select(t => t.Name).ToListAsync().Result);
+        }
+
+
+        [HttpGet("departments")]
+        public async Task<IActionResult> GetAllDepartmentsAsync()
+        {
+            return Ok(_context.Departments.Select(d => d.Name).ToListAsync().Result);
         }
 
     }
