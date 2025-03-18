@@ -74,5 +74,12 @@ namespace SchoolProject.Controllers
             return Ok(_context.Departments.Select(d => d.Name).ToListAsync().Result);
         }
 
+        [HttpGet("students?age")]
+        public async Task<IActionResult> GetAllStudentsAged20Async([FromQuery] int age = 20)
+        {
+            var students = await _context.Students.Where(s => s.Age == age).ToListAsync();
+            return Ok(students);
+        }
+
     }
 }
