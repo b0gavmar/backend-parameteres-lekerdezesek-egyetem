@@ -14,10 +14,19 @@ namespace SchoolProject.Controllers
         [HttpGet("StudentsOfDepartment")]
         public async Task<IActionResult> GetStudentsOfDepartmentAsync([FromQuery] string departmentName)
         {
-            var result = await (from s in _context.Students
+            //query format, sqlinjecktion mukodik rajta szoval nem biztonsagos
+            /*var result = await (from s in _context.Students
                                 from d in _context.Departments
                                 where d.Id == s.DepartmentId && d.Name == departmentName
                                 select s.Name).ToListAsync();
+            */
+
+            //method format
+            var result = _context.Students
+                .Join(_context.Departments, s=> s.DepartmentId, d => d.Id, (s, d) => new { Student = s, Department = d })
+                .Where(sd => sd.Department.Name == departmentName)
+                .Select(sd => sd.Student.Name)
+                .ToListAsync().Result;
 
             return Ok(result);
         }
