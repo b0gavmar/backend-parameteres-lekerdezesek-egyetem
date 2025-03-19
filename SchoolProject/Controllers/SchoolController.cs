@@ -78,7 +78,19 @@ namespace SchoolProject.Controllers
         [HttpGet("students")]
         public async Task<IActionResult> GetAllStudentsAsync()
         {
-            return Ok(_context.Students.Select(s=> s.Name).ToListAsync().Result);
+            return Ok(await _context.Students.Select(s=> s.Name).ToListAsync());
+        }
+
+        [HttpGet("studentsandemail")]
+        public async Task<IActionResult> GetAllStudentsNameAsync()
+        {
+            return Ok(await _context.Students.Select(s => new {s.Name, s.Email}).ToListAsync());
+        }
+
+        [HttpGet("studentsandemail2")]
+        public async Task<IActionResult> GetAllStudentsNameAndEmailAsync()
+        {
+            return Ok(await _context.Students.Select(s => new NameAndEmail { Name = s.Name, Email = s.Email}).ToListAsync());
         }
 
         [HttpGet("courses")]
@@ -100,7 +112,7 @@ namespace SchoolProject.Controllers
             return Ok(_context.Departments.Select(d => d.Name).ToListAsync().Result);
         }
 
-        [HttpGet("students?age")]
+        [HttpGet("studentsage")]
         public async Task<IActionResult> GetAllStudentsAged20Async([FromQuery] int age = 20)
         {
             var students = await _context.Students.Where(s => s.Age == age).ToListAsync();
