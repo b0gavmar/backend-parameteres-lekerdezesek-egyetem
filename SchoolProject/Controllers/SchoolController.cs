@@ -57,6 +57,23 @@ namespace SchoolProject.Controllers
             return Ok(_context.Students.Where(s => s.DepartmentId == department_id).Count());
         }
 
+        //többtáblás változata az előzőnek
+        [HttpGet("departments/students/count")]
+        public async Task<IActionResult> GetNumberOfStudentsByDepartmentAsync([FromQuery] string departmentName)
+        {
+            /*
+            var result = from s in _context.Students
+                         from d in _context.Departments
+                         where s.DepartmentId == d.Id && d.Name == departmentName
+                         select s;*/
+            
+            var result = _context.Students
+                .Join(_context.Departments, s => s.DepartmentId, d => d.Id, (s, d) => new { Student = s, Department = d })
+                .Where(sd => sd.Department.Name == departmentName)
+                .Select(sd => sd.Student);
+
+            return Ok(await result.CountAsync());
+        }
 
         [HttpGet("students")]
         public async Task<IActionResult> GetAllStudentsAsync()
