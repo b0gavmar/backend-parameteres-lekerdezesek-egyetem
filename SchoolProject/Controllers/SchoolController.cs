@@ -81,16 +81,34 @@ namespace SchoolProject.Controllers
             return Ok(await _context.Students.Select(s=> s.Name).ToListAsync());
         }
 
-        [HttpGet("studentsandemail")]
-        public async Task<IActionResult> GetAllStudentsNameAsync()
+        [HttpGet("studentsnameandemail")]
+        public async Task<IActionResult> GetAllStudentsNameAndEmailAsync()
         {
             return Ok(await _context.Students.Select(s => new {s.Name, s.Email}).ToListAsync());
         }
 
-        [HttpGet("studentsandemail2")]
-        public async Task<IActionResult> GetAllStudentsNameAndEmailAsync()
+        [HttpGet("studentsnameandemail2")]
+        public async Task<IActionResult> GetAllStudentsNameAndEmail2Async()
         {
-            return Ok(await _context.Students.Select(s => new NameAndEmail { Name = s.Name, Email = s.Email}).ToListAsync());
+            return Ok(
+                    await _context.Students
+                    .Select(s => new NameAndEmail {
+                        Name = s.Name, 
+                        Email = s.Email
+                    })
+                    .ToListAsync());
+        }
+
+        [HttpGet("studentsnameandemail3")]
+        public async Task<IActionResult> GetAllStudentsNameAndEmail3Async()
+        {
+            var result = from s in _context.Students
+                         select new NameAndEmail
+                         {
+                             Name = s.Name,
+                             Email = s.Email
+                         };
+            return Ok(await result.ToListAsync());
         }
 
         [HttpGet("courses")]
